@@ -1,4 +1,7 @@
 package com.jobportal.auth_service.domain;
 
-public class Role {
+public enum Role {
+    ADMIN,
+    EMPLOYEE,
+    EMPLOYER,
 }
