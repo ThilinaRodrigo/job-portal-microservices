@@ -2,7 +2,7 @@ package com.jobportal.auth_service.domain;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.springframework.validation.annotation.Validated;
 
@@ -23,7 +23,7 @@ public class User extends BaseEntity {
 
     @Column(unique = true)
     @Email
-    @Max(30)
+    @Size(max = 30)
     private String email;
 
     private String password;
