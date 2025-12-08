@@ -1,12 +1,12 @@
 server:
-  port: 8081
+  port: 8082
 
 spring:
   application:
-    name: auth-service
+    name: job-service
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/jobAuthdb
+    url: jdbc:postgresql://localhost:5432/jobdb
     username: postgres
     password: root
 
@@ -15,10 +15,6 @@ spring:
       ddl-auto: update
     show-sql: true
 
-jwt:
-  secret: "P9edfc7xqRlU9zmlA3/Iy1/BkVjasyS+V4sTU2ERk8M="
-  expiration: 86400000 # 1 day
-
 eureka:
   preferIpAddress: true
   client:
@@ -26,3 +22,4 @@ eureka:
     fetchRegistry: true
     serviceUrl:
       defaultZone: http://localhost:8070/eureka/
+
