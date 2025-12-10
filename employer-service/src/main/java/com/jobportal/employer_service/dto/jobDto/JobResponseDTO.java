@@ -1,21 +1,13 @@
-package com.jobportal.job_service.dto;
+package com.jobportal.employer_service.dto.jobDto;
 
-import com.jobportal.job_service.enums.JobType;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
+import com.jobportal.employer_service.enums.JobType;
+
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
 @Data
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
 public class JobResponseDTO {
-
     private Long id;
     private String title;
     private String description;

@@ -16,7 +16,7 @@ public class JobController {
 
     private final JobServiceImpl jobService;
 
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<JobResponseDTO> createJob(@RequestBody JobRequestDTO jobRequestDTO) {
         JobResponseDTO createdJob = jobService.createJob(jobRequestDTO);
         return ResponseEntity.ok(createdJob);
