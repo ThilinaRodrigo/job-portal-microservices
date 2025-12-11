@@ -13,4 +13,9 @@ public class jobFeignClientFallback implements JobFeignClient {
     public ResponseEntity<JobResponseDTO> createJob(JobRequestDTO jobRequestDTO) {
         return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).build();
     }
+
+    @Override
+    public ResponseEntity<JobResponseDTO> updateJob(Long jobId, JobRequestDTO jobRequestDTO) {
+        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).build();
+    }
 }
