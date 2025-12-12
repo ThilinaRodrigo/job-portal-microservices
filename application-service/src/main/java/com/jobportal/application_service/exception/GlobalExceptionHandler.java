@@ -1,6 +1,6 @@
-package com.jobportal.employee_service.exception;
+package com.jobportal.application_service.exception;
 
-import com.jobportal.employee_service.dto.ErrorResponseDto;
+import com.jobportal.application_service.dto.ErrorResponseDto;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -56,3 +56,4 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
+

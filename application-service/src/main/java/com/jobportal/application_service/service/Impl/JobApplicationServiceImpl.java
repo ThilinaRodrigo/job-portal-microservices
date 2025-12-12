@@ -1,0 +1,59 @@
+package com.jobportal.application_service.service.Impl;
+
+import com.jobportal.application_service.dto.JobApplicationRequestDTO;
+import com.jobportal.application_service.entity.JobApplication;
+import com.jobportal.application_service.enums.ApplicationStatus;
+import com.jobportal.application_service.exception.ResourceNotFoundException;
+import com.jobportal.application_service.mapper.JobApplicationMapper;
+import com.jobportal.application_service.repository.JobApplicationRepository;
+import com.jobportal.application_service.service.IJobApplicationService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+@RequiredArgsConstructor
+public class JobApplicationServiceImpl implements IJobApplicationService {
+
+    private final JobApplicationRepository jobApplicationRepository;
+
+    @Override
+    public JobApplication applyForJob(JobApplicationRequestDTO dto) {
+
+        JobApplication jobApp = JobApplicationMapper.toEntity(dto);
+        jobApplicationRepository.save(jobApp);
+        jobApp.setId(jobApp.getId());
+
+        return jobApp;
+    }
+
+    @Override
+    public List<JobApplication> getJobApplicationsByJobId(Long jobId) {
+        return jobApplicationRepository.getJobApplicationsByJobId(jobId);
+    }
+
+    @Override
+    public List<JobApplication> getJobApplicationsByApplicantId(Long applicantId) {
+        return jobApplicationRepository.getJobApplicationsByApplicantId(applicantId);
+    }
+
+    @Override
+    public JobApplication getApplicationById(Long applicationId) {
+        return jobApplicationRepository.findById(applicationId)
+                .orElseThrow(()-> new ResourceNotFoundException("Application Not Found"));
+    }
+
+    @Override
+    public JobApplication updateApplicationStatus(Long applicationId, String status) {
+
+        JobApplication jobApplication = jobApplicationRepository.findById(applicationId)
+                .orElseThrow(()-> new ResourceNotFoundException("Application Not Found"));
+
+        jobApplication.setStatus(ApplicationStatus.valueOf(status));
+        jobApplicationRepository.save(jobApplication);
+
+        return jobApplication;
+    }
+
+}

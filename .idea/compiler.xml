@@ -18,6 +18,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="job-service" />
         <module name="employer-service" />
+        <module name="application-service" />
         <module name="eureka-server" />
         <module name="employee-service" />
       </profile>
@@ -28,6 +29,7 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="application-service" options="-parameters" />
       <module name="auth-service" options="-parameters" />
       <module name="employee-service" options="-parameters" />
       <module name="employer-service" options="-parameters" />

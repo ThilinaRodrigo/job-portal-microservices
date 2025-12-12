@@ -1,4 +1,4 @@
-package com.jobportal.employee_service.repository;
+package com.jobportal.application_service.exception;
 
 public class ResourceNotFoundException extends RuntimeException {
     public ResourceNotFoundException(String message) {
