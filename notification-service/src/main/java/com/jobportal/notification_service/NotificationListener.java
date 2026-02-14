@@ -29,6 +29,6 @@ public class NotificationListener {
     }
 
     private void handleJobApplied(JobAppliedEvent event) {
-        System.out.println("Job applied by: " + event.getFirstName() + " " + event.getLastName() + " for job ID: " + event.getJobId());
+        System.out.println("Job applied by: " + event.getFirstName() + " " + event.getLastName() + " for job ID: " + event.getJobId()+"with job title: " + event.getTitle() + " with email: " + event.getEmail());
     }
 }

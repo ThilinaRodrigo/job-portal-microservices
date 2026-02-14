@@ -1,4 +1,4 @@
-package com.jobportal.application_service.fallback;
+package com.jobportal.application_service.service.client.fallback;
 
 import com.jobportal.application_service.dto.client.EmployeeResponseDTO;
 import com.jobportal.application_service.service.client.EmployeeFeignClient;

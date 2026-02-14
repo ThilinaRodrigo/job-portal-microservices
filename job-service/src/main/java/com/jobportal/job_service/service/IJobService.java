@@ -11,5 +11,6 @@ public interface IJobService {
     List<JobResponseDTO> getJobsByEmployer(Long employerId);
     List<JobResponseDTO> getAllJobs();
     JobResponseDTO updateJob(Long jobId,JobRequestDTO request);
+    JobResponseDTO getJobById(Long jobId);
 
 }

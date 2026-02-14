@@ -55,4 +55,11 @@ public class JobServiceImpl implements IJobService {
         jobRepository.save(updatedJob);
         return JobMapper.entityToResDto(updatedJob);
     }
+
+    @Override
+    public JobResponseDTO getJobById(Long jobId) {
+        return jobRepository.findById(jobId)
+                .map(JobMapper::entityToResDto)
+                .orElseThrow(()-> new RuntimeException("Job not found"));
+    }
 }

@@ -28,6 +28,12 @@ public class JobController {
         return ResponseEntity.ok(jobs);
     }
 
+    @GetMapping("/{jobId}")
+    public ResponseEntity<JobResponseDTO> getJobById(@PathVariable Long jobId) {
+        JobResponseDTO job = jobService.getJobById(jobId);
+        return ResponseEntity.ok(job);
+    }
+
     @GetMapping
     public ResponseEntity<List<JobResponseDTO>> getAllJobs() {
         List<JobResponseDTO> jobs = jobService.getAllJobs();
