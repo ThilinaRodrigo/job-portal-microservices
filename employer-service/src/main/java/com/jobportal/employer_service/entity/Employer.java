@@ -1,7 +1,6 @@
 package com.jobportal.employer_service.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,9 +12,10 @@ import lombok.Setter;
 public class Employer {
 
         @Id
-        private String employerId;
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        private Long employerId;
 
-        private Long userId;
+//        private Long userId;
         private String employerName;
         private String employerDescription;
         private String employerLocation;

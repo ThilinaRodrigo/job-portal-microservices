@@ -1,10 +1,10 @@
-package com.jobportal.employer_service.dto;
+package com.jobportal.application_service.dto.client;
 
-import lombok.*;
+import lombok.Data;
 
 @Data
-public class EmployerRequestDTO {
-
+public class EmployerResponseDTO {
+    private Long employerId;
     private String employerName;
     private String employerDescription;
     private String employerLocation;
@@ -12,5 +12,4 @@ public class EmployerRequestDTO {
     private String employerEmail;
     private String contactPerson;
     private String contactPhone;
-
 }

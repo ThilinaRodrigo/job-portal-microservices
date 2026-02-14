@@ -9,7 +9,6 @@ public class EmployerMapper {
 
         Employer employer = new Employer();
 
-        employer.setUserId(dto.getUserId());
         employer.setEmployerName(dto.getEmployerName());
         employer.setEmployerDescription(dto.getEmployerDescription());
         employer.setEmployerLocation(dto.getEmployerLocation());

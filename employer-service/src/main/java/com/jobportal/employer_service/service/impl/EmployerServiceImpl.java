@@ -19,9 +19,9 @@ public class EmployerServiceImpl implements IEmployerService {
     @Override
     public Employer createEmployer(EmployerRequestDTO employerRequestDTO) {
 
-        if(employerRepository.findByUserId(employerRequestDTO.getUserId()) != null) {
-            throw new RuntimeException("Employer with userId " + employerRequestDTO.getUserId() + " already exists.");
-        }
+//        if(employerRepository.findByUserId(employerRequestDTO.getUserId()) != null) {
+//            throw new RuntimeException("Employer with userId " + employerRequestDTO.getUserId() + " already exists.");
+//        }
 
         Employer employer = EmployerMapper.toEntity(employerRequestDTO);
         employerRepository.save(employer);

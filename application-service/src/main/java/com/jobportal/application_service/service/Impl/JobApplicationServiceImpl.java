@@ -2,6 +2,7 @@ package com.jobportal.application_service.service.Impl;
 
 import com.jobportal.application_service.dto.JobApplicationRequestDTO;
 import com.jobportal.application_service.dto.client.EmployeeResponseDTO;
+import com.jobportal.application_service.dto.client.EmployerResponseDTO;
 import com.jobportal.application_service.dto.client.JobResponseDTO;
 import com.jobportal.application_service.entity.JobApplication;
 import com.jobportal.application_service.enums.ApplicationStatus;
@@ -11,6 +12,7 @@ import com.jobportal.application_service.repository.JobApplicationRepository;
 import com.jobportal.application_service.service.ApplicationEventProducer;
 import com.jobportal.application_service.service.IJobApplicationService;
 import com.jobportal.application_service.service.client.EmployeeFeignClient;
+import com.jobportal.application_service.service.client.EmployerFeignClient;
 import com.jobportal.application_service.service.client.JobFeignClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,24 +27,25 @@ public class JobApplicationServiceImpl implements IJobApplicationService {
     private final ApplicationEventProducer applicationEventProducer;
     private final EmployeeFeignClient employeeFeignClient;
     private final JobFeignClient jobFeignClient;
+    private final EmployerFeignClient employerClient;
 
     @Override
     public JobApplication applyForJob(JobApplicationRequestDTO dto) {
 
         EmployeeResponseDTO emp = employeeFeignClient.getEmployeeById(dto.getApplicantId()).getBody();
         JobResponseDTO job = jobFeignClient.getJobById(dto.getJobId()).getBody();
+        assert job != null;
+        EmployerResponseDTO employer = employerClient.getById(job.getEmployerId()).getBody();
 
         if (emp == null) {
             throw new ResourceNotFoundException("Applicant Not Found");
         }
-        if (job == null) {
-            throw new ResourceNotFoundException("Job Not Found");
-        }
 
         JobApplication jobApp = JobApplicationMapper.toEntity(dto);
         jobApplicationRepository.save(jobApp);
+        assert employer != null;
         applicationEventProducer.publishJobCreated(
-                new com.jobportal.events.JobAppliedEvent(jobApp.getJobId(), job.getTitle(), emp.getFirstName(), emp.getLastName(), emp.getEmail())
+                new com.jobportal.events.JobAppliedEvent(jobApp.getJobId(),employer.getEmployerName(), job.getTitle(), emp.getFirstName(), emp.getLastName(), emp.getEmail())
         );
         jobApp.setId(jobApp.getId());
 

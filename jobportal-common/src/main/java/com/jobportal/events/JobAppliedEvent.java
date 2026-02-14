@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 public class JobAppliedEvent implements JobPortalEvent {
 
     private Long jobId;
+    private String employerName;
     private String title;
     private String firstName;
     private String lastName;
