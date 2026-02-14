@@ -11,4 +11,6 @@ public class JobCreatedEvent implements JobPortalEvent {
     private Long jobId;
     private String title;
     private Long employerId;
+    private String employerEmail;
+    private String employerName;
 }

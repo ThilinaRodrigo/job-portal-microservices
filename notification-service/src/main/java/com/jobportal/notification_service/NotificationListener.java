@@ -25,11 +25,11 @@ public class NotificationListener {
     }
 
     private void handleJobCreated(JobCreatedEvent event) {
-        System.out.println("Job created: " + event.getJobId());
+        System.out.println("Job created: " + event.getJobId() + " with title: " + event.getTitle() + " in " + event.getEmployerEmail() + " with employer name: " + event.getEmployerName());
     }
 
     private void handleJobApplied(JobAppliedEvent event) {
-        System.out.println("Job applied by: " + event.getFirstName() + " " + event.getLastName() + " for job ID: " + event.getJobId()+"with job title: " +
-                event.getTitle() +"in " +event.getEmployerName() + " with email: " + event.getEmail());
+        System.out.println("Job applied by: " + event.getFirstName() + " " + event.getLastName() + " for job ID: " + event.getJobId()+" with job title: " +
+                event.getTitle() +" in " +event.getEmployerName() + " with email: " + event.getEmail());
     }
 }
