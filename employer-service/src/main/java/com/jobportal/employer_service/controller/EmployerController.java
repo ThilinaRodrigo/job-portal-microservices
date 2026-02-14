@@ -42,13 +42,13 @@ public class EmployerController {
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/jobs/create")
-    public ResponseEntity<?> createJob(@RequestBody JobRequestDTO jobRequestDTO) {
-        return jobFeignClient.createJob(jobRequestDTO);
-    }
-
-    @PutMapping("jobs/{jobId}")
-    public ResponseEntity<JobResponseDTO> updateJob(@PathVariable Long jobId, @RequestBody JobRequestDTO jobRequestDTO){
-        return jobFeignClient.updateJob(jobId, jobRequestDTO);
-    }
+//    @PostMapping("/jobs/create")
+//    public ResponseEntity<?> createJob(@RequestBody JobRequestDTO jobRequestDTO) {
+//        return jobFeignClient.createJob(jobRequestDTO);
+//    }
+//
+//    @PutMapping("jobs/{jobId}")
+//    public ResponseEntity<JobResponseDTO> updateJob(@PathVariable Long jobId, @RequestBody JobRequestDTO jobRequestDTO){
+//        return jobFeignClient.updateJob(jobId, jobRequestDTO);
+//    }
 }
