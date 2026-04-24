@@ -10,6 +10,7 @@ spring:
             locator:
               enabled: false
               lower-case-service-id: true
+
 server:
   port: 8072
 
@@ -37,3 +38,7 @@ management:
 logging:
   level:
     org.springframework.cloud.gateway: DEBUG
+
+jwt:
+  secret: "P9edfc7xqRlU9zmlA3/Iy1/BkVjasyS+V4sTU2ERk8M="
+  expiration: 86400000 # 1 day
