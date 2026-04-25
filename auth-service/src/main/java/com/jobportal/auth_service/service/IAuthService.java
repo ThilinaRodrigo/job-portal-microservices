@@ -7,4 +7,6 @@ import com.jobportal.auth_service.dto.RegisterRequest;
 public interface IAuthService {
     public AuthResponse register(RegisterRequest request);
     public AuthResponse login(AuthRequest request);
+    boolean validateToken(String token);
+
 }

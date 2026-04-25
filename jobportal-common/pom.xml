@@ -24,15 +24,15 @@
 
 
     <!--    <modules>-->
-<!--        <module>eureka-server</module>-->
-<!--        <module>gateway-server</module>-->
-<!--        <module>employer-service</module>-->
-<!--        <module>employee-service</module>-->
-<!--        <module>job-service</module>-->
-<!--        <module>application-service</module>-->
-<!--        <module>notification-service</module>-->
-<!--        <module>jobportal-common</module> &lt;!&ndash; add this &ndash;&gt;-->
-<!--    </modules>-->
+    <!--        <module>eureka-server</module>-->
+    <!--        <module>gateway-server</module>-->
+    <!--        <module>employer-service</module>-->
+    <!--        <module>employee-service</module>-->
+    <!--        <module>job-service</module>-->
+    <!--        <module>application-service</module>-->
+    <!--        <module>notification-service</module>-->
+    <!--        <module>jobportal-common</module> &lt;!&ndash; add this &ndash;&gt;-->
+    <!--    </modules>-->
 
 
 

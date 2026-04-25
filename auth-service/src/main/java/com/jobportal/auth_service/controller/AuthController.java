@@ -5,11 +5,10 @@ import com.jobportal.auth_service.dto.AuthResponse;
 import com.jobportal.auth_service.dto.RegisterRequest;
 import com.jobportal.auth_service.service.IAuthService;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/auth")
 @AllArgsConstructor
 public class AuthController {
 
@@ -23,5 +22,10 @@ public class AuthController {
     @PostMapping("/login")
     public AuthResponse login(@RequestBody AuthRequest request) {
         return authService.login(request);
+    }
+
+    @GetMapping("/validate")
+    public boolean validateToken(@RequestParam String token) {
+        return authService.validateToken(token);
     }
 }

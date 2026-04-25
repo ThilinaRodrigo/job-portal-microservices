@@ -50,4 +50,9 @@ public class AuthServiceImpl implements IAuthService {
         String token = jwtUtils.generateToken(user);
         return new AuthResponse(token,user.getId());
     }
+
+    @Override
+    public boolean validateToken(String token) {
+        return jwtUtils.validateToken(token);
+    }
 }
