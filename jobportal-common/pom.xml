@@ -8,15 +8,32 @@
     <artifactId>jobportal-common</artifactId>
     <version>1.0-SNAPSHOT</version>
 
+    <properties>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+    <dependencies>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.34</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
+
     <!--    <modules>-->
-<!--        <module>eureka-server</module>-->
-<!--        <module>gateway-server</module>-->
-<!--        <module>employer-service</module>-->
-<!--        <module>employee-service</module>-->
-<!--        <module>job-service</module>-->
-<!--        <module>application-service</module>-->
-<!--        <module>notification-service</module>-->
-<!--        <module>jobportal-common</module> &lt;!&ndash; add this &ndash;&gt;-->
-<!--    </modules>-->
+    <!--        <module>eureka-server</module>-->
+    <!--        <module>gateway-server</module>-->
+    <!--        <module>employer-service</module>-->
+    <!--        <module>employee-service</module>-->
+    <!--        <module>job-service</module>-->
+    <!--        <module>application-service</module>-->
+    <!--        <module>notification-service</module>-->
+    <!--        <module>jobportal-common</module> &lt;!&ndash; add this &ndash;&gt;-->
+    <!--    </modules>-->
+
+
 
 </project>
