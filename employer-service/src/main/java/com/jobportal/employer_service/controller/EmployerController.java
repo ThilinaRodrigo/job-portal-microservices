@@ -1,14 +1,11 @@
 package com.jobportal.employer_service.controller;
 
 import com.jobportal.employer_service.dto.EmployerRequestDTO;
-import com.jobportal.employer_service.dto.jobDto.JobRequestDTO;
-import com.jobportal.employer_service.dto.jobDto.JobResponseDTO;
 import com.jobportal.employer_service.entity.Employer;
 import com.jobportal.employer_service.service.client.JobFeignClient;
 import com.jobportal.employer_service.service.impl.EmployerServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -19,28 +16,24 @@ public class EmployerController {
     private final EmployerServiceImpl employerService;
     private final JobFeignClient jobFeignClient;
 
-    @PreAuthorize("hasRole('EMPLOYER')")
     @PostMapping
     public ResponseEntity<Employer> create(@RequestBody EmployerRequestDTO employerRequestDTO) {
         Employer createdEmployer = employerService.createEmployer(employerRequestDTO);
         return ResponseEntity.ok(createdEmployer);
     }
 
-    @PreAuthorize("hasRole('EMPLOYER')")
     @GetMapping("/{id}")
     public ResponseEntity<Employer> getById(@PathVariable Long id) {
         Employer employer = employerService.getEmployerById(id);
         return ResponseEntity.ok(employer);
     }
 
-    @PreAuthorize("hasRole('EMPLOYER')")
     @PutMapping("/{id}")
     public ResponseEntity<Employer> update(@PathVariable Long id, @RequestBody EmployerRequestDTO employerRequestDTO) {
         Employer updatedEmployer = employerService.updateEmployer(id, employerRequestDTO);
         return ResponseEntity.ok(updatedEmployer);
     }
 
-    @PreAuthorize("hasRole('EMPLOYER')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         employerService.deleteEmployer(id);
