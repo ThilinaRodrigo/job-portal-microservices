@@ -47,7 +47,10 @@ services:
 
   # ------------------ JOB SERVICE ------------------
   job-service:
-    build: ./job-service
+
+    build:
+      context: .
+      dockerfile: job-service/Dockerfile
     container_name: job-service
     depends_on:
       - job-db
@@ -80,7 +83,9 @@ services:
 
   # ------------------ EMPLOYEE SERVICE ------------------
   employee-service:
-    build: ./employee-service
+    build:
+      context: .
+      dockerfile: employee-service/Dockerfile
     container_name: employee-service
     depends_on:
       - employee-db
@@ -113,7 +118,9 @@ services:
 
   # ------------------ EMPLOYER SERVICE ------------------
   employer-service:
-    build: ./employer-service
+    build:
+      context: .
+      dockerfile: employer-service/Dockerfile
     container_name: employer-service
     depends_on:
       - employer-db
@@ -146,7 +153,9 @@ services:
 
   # ------------------ APPLICATION SERVICE ------------------
   application-service:
-    build: ./application-service
+    build:
+      context: .
+      dockerfile: application-service/Dockerfile
     container_name: application-service
     depends_on:
       - application-db
