@@ -1,0 +1,85 @@
+name: Build and push Docker Images
+
+on:
+  push:
+    branches: [ "main" ]
+    
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v4
+        with:
+         username: ${{ vars.DOCKER_USERNAME }}
+         password: ${{ secrets.DOCKER_PASSWORD }}
+
+      # ---------------- AUTH SERVICE ----------------
+      - name: Build & Push Auth Service
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: auth-service/Dockerfile
+          push: true
+          tags: ${{ vars.DOCKER_USERNAME }}/auth-service:latest
+
+      # ---------------- JOB SERVICE ----------------
+      - name: Build & Push Job Service
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: job-service/Dockerfile
+          push: true
+          tags: ${{ vars.DOCKER_USERNAME }}/job-service:latest
+
+      # ---------------- EMPLOYEE SERVICE ----------------
+      - name: Build & Push Employee Service
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: employee-service/Dockerfile
+          push: true
+          tags: ${{ vars.DOCKER_USERNAME }}/employee-service:latest
+
+      # ---------------- EMPLOYER SERVICE ----------------
+      - name: Build & Push Employer Service
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: employer-service/Dockerfile
+          push: true
+          tags: ${{ vars.DOCKER_USERNAME }}/employer-service:latest
+
+      # ---------------- APPLICATION SERVICE ----------------
+      - name: Build & Push Application Service
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: application-service/Dockerfile
+          push: true
+          tags: ${{ vars.DOCKER_USERNAME }}/application-service:latest
+
+      # ---------------- GATEWAY ----------------
+      - name: Build & Push Gateway
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: gateway-server/Dockerfile
+          push: true
+          tags: ${{ vars.DOCKER_USERNAME }}/gateway-server:latest
+
+      # ---------------- EUREKA ----------------
+      - name: Build & Push Eureka
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: eureka-server/Dockerfile
+          push: true
+          tags: ${{ vars.DOCKER_USERNAME }}/eureka-server:latest
