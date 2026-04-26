@@ -1,0 +1,241 @@
+services:
+
+  # ------------------ EUREKA ------------------
+  eureka-server:
+    image: thilinarodrigo/eureka-server:latest
+    container_name: eureka-server
+    ports:
+      - "8070:8070"
+    networks:
+      - backend
+    restart: always
+
+  # ------------------ AUTH SERVICE ------------------
+  auth-service:
+    image: thilinarodrigo/auth-service:latest
+    container_name: auth-service
+    depends_on:
+      - auth-db
+      - eureka-server
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_DATASOURCE_URL: jdbc:postgresql://auth-db:5432/auth_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8070/eureka/
+      SPRING_DATASOURCE_HIKARI_INITIALIZATION_FAIL_TIMEOUT: 60000
+    networks:
+      - backend
+    restart: always
+
+  auth-db:
+    image: postgres:15
+    container_name: auth-db
+    environment:
+      POSTGRES_DB: auth_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5433:5432"
+    volumes:
+      - auth_data:/var/lib/postgresql/data
+    networks:
+      - backend
+    restart: always
+
+  # ------------------ JOB SERVICE ------------------
+  job-service:
+    image: thilinarodrigo/job-service:latest
+    container_name: job-service
+    depends_on:
+      - job-db
+      - eureka-server
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_DATASOURCE_URL: jdbc:postgresql://job-db:5432/job_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8070/eureka/
+      SPRING_DATASOURCE_HIKARI_INITIALIZATION_FAIL_TIMEOUT: 60000
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+    networks:
+      - backend
+    restart: always
+
+  job-db:
+    image: postgres:15
+    container_name: job-db
+    environment:
+      POSTGRES_DB: job_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5434:5432"
+    volumes:
+      - job_data:/var/lib/postgresql/data
+    networks:
+      - backend
+    restart: always
+
+  # ------------------ EMPLOYEE SERVICE ------------------
+  employee-service:
+    image: thilinarodrigo/employee-service:latest
+    container_name: employee-service
+    depends_on:
+      - employee-db
+      - eureka-server
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_DATASOURCE_URL: jdbc:postgresql://employee-db:5432/employee_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8070/eureka/
+      SPRING_DATASOURCE_HIKARI_INITIALIZATION_FAIL_TIMEOUT: 60000
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+    networks:
+      - backend
+    restart: always
+
+  employee-db:
+    image: postgres:15
+    container_name: employee-db
+    environment:
+      POSTGRES_DB: employee_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5435:5432"
+    volumes:
+      - employee_data:/var/lib/postgresql/data
+    networks:
+      - backend
+    restart: always
+
+  # ------------------ EMPLOYER SERVICE ------------------
+  employer-service:
+    image: thilinarodrigo/employer-service:latest
+    container_name: employer-service
+    depends_on:
+      - employer-db
+      - eureka-server
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_DATASOURCE_URL: jdbc:postgresql://employer-db:5432/employer_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8070/eureka/
+      SPRING_DATASOURCE_HIKARI_INITIALIZATION_FAIL_TIMEOUT: 60000
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+    networks:
+      - backend
+    restart: always
+
+  employer-db:
+    image: postgres:15
+    container_name: employer-db
+    environment:
+      POSTGRES_DB: employer_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5436:5432"
+    volumes:
+      - employer_data:/var/lib/postgresql/data
+    networks:
+      - backend
+    restart: always
+
+  # ------------------ APPLICATION SERVICE ------------------
+  application-service:
+    image: thilinarodrigo/application-service:latest
+    container_name: application-service
+    depends_on:
+      - application-db
+      - eureka-server
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_DATASOURCE_URL: jdbc:postgresql://application-db:5432/application_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8070/eureka/
+      SPRING_DATASOURCE_HIKARI_INITIALIZATION_FAIL_TIMEOUT: 60000
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+    networks:
+      - backend
+    restart: always
+
+  application-db:
+    image: postgres:15
+    container_name: application-db
+    environment:
+      POSTGRES_DB: application_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5437:5432"
+    volumes:
+      - application_data:/var/lib/postgresql/data
+    networks:
+      - backend
+    restart: always
+
+  # ------------------ ZOOKEEPER ------------------
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.5.0
+    container_name: zookeeper
+    ports:
+      - "2181:2181"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    networks:
+      - backend
+    restart: always
+
+  # ------------------ KAFKA ------------------
+  kafka:
+    image: confluentinc/cp-kafka:7.5.0
+    container_name: kafka
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+    networks:
+      - backend
+    restart: always
+
+  # ------------------ GATEWAY ------------------
+  gateway-server:
+    image: thilinarodrigo/gateway-server:latest
+    container_name: gateway-server
+    ports:
+      - "8072:8072"
+    depends_on:
+      - eureka-server
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8070/eureka/
+    networks:
+      - backend
+    restart: always
+
+# ------------------ VOLUMES ------------------
+volumes:
+  auth_data:
+  job_data:
+  employee_data:
+  employer_data:
+  application_data:
+
+# ------------------ NETWORK ------------------
+networks:
+  backend:
