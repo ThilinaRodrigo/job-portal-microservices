@@ -6,12 +6,9 @@ spring:
     name: application-service
 
   datasource:
-#    url: jdbc:postgresql://localhost:5432/jobapplicationdb
-#    username: postgres
-#    password: root
-    url: ${SPRING_DATASOURCE_URL}
-    username: ${SPRING_DATASOURCE_USERNAME}
-    password: ${SPRING_DATASOURCE_PASSWORD}
+    url: jdbc:postgresql://localhost:5432/jobapplicationdb
+    username: postgres
+    password: root
 
   jpa:
     hibernate:
@@ -19,7 +16,7 @@ spring:
     show-sql: true
 
   kafka:
-    bootstrap-servers: kafka:9092
+    bootstrap-servers: localhost:9092
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
@@ -36,7 +33,7 @@ eureka:
     registerWithEureka: true
     fetchRegistry: true
     serviceUrl:
-      defaultZone: http://eureka-server:8070/eureka/
+      defaultZone: http://localhost:8070/eureka/
 
 jwt:
   secret: "P9edfc7xqRlU9zmlA3/Iy1/BkVjasyS+V4sTU2ERk8M="

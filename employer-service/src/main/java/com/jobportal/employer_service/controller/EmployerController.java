@@ -1,8 +1,6 @@
 package com.jobportal.employer_service.controller;
 
 import com.jobportal.employer_service.dto.EmployerRequestDTO;
-import com.jobportal.employer_service.dto.jobDto.JobRequestDTO;
-import com.jobportal.employer_service.dto.jobDto.JobResponseDTO;
 import com.jobportal.employer_service.entity.Employer;
 import com.jobportal.employer_service.service.client.JobFeignClient;
 import com.jobportal.employer_service.service.impl.EmployerServiceImpl;
