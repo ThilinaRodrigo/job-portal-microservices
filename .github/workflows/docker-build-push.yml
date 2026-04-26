@@ -34,11 +34,11 @@ jobs:
             dockerfile: application-service/Dockerfile
 
           - name: gateway-server
-            context: .
+            context: ./gateway-server
             dockerfile: gateway-server/Dockerfile
 
           - name: eureka-server
-            context: .
+            context: ./eureka-server
             dockerfile: eureka-server/Dockerfile
 
     steps:
@@ -51,7 +51,7 @@ jobs:
       - name: Login to Docker Hub
         uses: docker/login-action@v4
         with:
-          username: ${{ secrets.DOCKER_USERNAME }}
+          username: ${{ vars.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build & Push ${{ matrix.service.name }}
@@ -60,7 +60,7 @@ jobs:
           context: ${{ matrix.service.context }}
           file: ${{ matrix.service.dockerfile }}
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/${{ matrix.service.name }}:latest
+          tags: ${{ vars.DOCKER_USERNAME }}/${{ matrix.service.name }}:latest
 
 #name: Build and push Docker Images
 #
