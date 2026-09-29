@@ -50,10 +50,13 @@ public class JobServiceImpl implements IJobService {
         Job job = JobMapper.reqDtoToEntity(request);
         jobRepository.save(job);
 
+        final EmployerResponseDTO finalEmployer = employer;
         try {
-            jobEventProducer.publishJobCreated(
-                    new JobCreatedEvent(job.getId(), job.getTitle(), job.getEmployerId(), employer.getEmployerEmail(), employer.getEmployerName())
-            );
+            java.util.concurrent.CompletableFuture.runAsync(() -> {
+                jobEventProducer.publishJobCreated(
+                        new JobCreatedEvent(job.getId(), job.getTitle(), job.getEmployerId(), finalEmployer.getEmployerEmail(), finalEmployer.getEmployerName())
+                );
+            });
         } catch (Exception e) {
             // Kafka publishing is best-effort if broker is offline during local test
         }
@@ -145,5 +148,12 @@ public class JobServiceImpl implements IJobService {
         return jobRepository.findById(jobId)
                 .map(JobMapper::entityToResDto)
                 .orElseThrow(()-> new RuntimeException("Job not found"));
+    }
+
+    @Override
+    public void deleteJob(Long jobId) {
+        Job existingJob = jobRepository.findById(jobId)
+                .orElseThrow(() -> new RuntimeException("Job not found with id: " + jobId));
+        jobRepository.delete(existingJob);
     }
 }

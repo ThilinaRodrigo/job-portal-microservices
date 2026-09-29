@@ -34,6 +34,9 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
                     new RouteRule("GET", "/employees"),
                     new RouteRule("GET", "/employers"),
                     new RouteRule("GET", "/jobs"),
+                    new RouteRule("POST", "/jobs"),
+                    new RouteRule("PUT", "/jobs"),
+                    new RouteRule("DELETE", "/jobs"),
                     new RouteRule("GET", "/job-applications"),
                     new RouteRule("GET", "/applications")
             ),
@@ -49,6 +52,7 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
                     new RouteRule("POST", "/jobs"),     // create job
                     new RouteRule("PUT", "/jobs"),      // update job
                     new RouteRule("GET", "/jobs"),
+                    new RouteRule("DELETE", "/jobs"),   // delete job
 
                     // Applications
                     new RouteRule("GET", "/job-applications"),
