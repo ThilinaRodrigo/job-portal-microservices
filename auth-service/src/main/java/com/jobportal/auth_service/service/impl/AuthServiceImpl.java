@@ -35,7 +35,7 @@ public class AuthServiceImpl implements IAuthService {
         userRepository.save(user);
 
         String token = jwtUtils.generateToken(user);
-        return new AuthResponse(token,user.getId());
+        return new AuthResponse(token, user.getId(), user.getEmail(), user.getRole());
     }
 
     // Login
@@ -48,7 +48,7 @@ public class AuthServiceImpl implements IAuthService {
         }
 
         String token = jwtUtils.generateToken(user);
-        return new AuthResponse(token,user.getId());
+        return new AuthResponse(token, user.getId(), user.getEmail(), user.getRole());
     }
 
     @Override

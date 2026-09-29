@@ -15,14 +15,19 @@ public class RouteValidator {
 
         System.out.println("PATH: " + path + " METHOD: " + method);
 
-        if (path.startsWith("/auth")) {
+        // Always allow CORS preflight requests
+        if (method.equalsIgnoreCase("OPTIONS")) {
             return false;
         }
 
-        if (method.equalsIgnoreCase("GET") && path.contains("/jobs")) {
+        if (path.startsWith("/auth") || path.startsWith("/jobportal/auth")) {
+            return false;
+        }
+
+        if (method.equalsIgnoreCase("GET") && (path.contains("/jobs") || path.contains("/jobportal/jobs"))) {
             return false;
         }
 
         return true;
     };
-}
+}
