@@ -10,6 +10,7 @@ public interface IJobService {
     JobResponseDTO createJob(JobRequestDTO request);
     List<JobResponseDTO> getJobsByEmployer(Long employerId);
     List<JobResponseDTO> getAllJobs();
+    List<JobResponseDTO> searchJobs(String search, String location, String type);
     JobResponseDTO updateJob(Long jobId,JobRequestDTO request);
     JobResponseDTO getJobById(Long jobId);
 

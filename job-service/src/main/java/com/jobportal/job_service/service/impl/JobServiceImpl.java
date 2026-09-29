@@ -55,6 +55,53 @@ public class JobServiceImpl implements IJobService {
     }
 
     @Override
+    public List<JobResponseDTO> searchJobs(String search, String location, String typeStr) {
+        final String cleanType = (typeStr != null && !typeStr.trim().isEmpty()) ? typeStr.trim().toUpperCase() : null;
+        com.jobportal.job_service.enums.JobType jobType = null;
+        if (cleanType != null) {
+            try {
+                if (cleanType.equals("INTERNSHIP")) {
+                    jobType = com.jobportal.job_service.enums.JobType.INTERNSHIP;
+                } else {
+                    jobType = com.jobportal.job_service.enums.JobType.valueOf(cleanType);
+                }
+            } catch (Exception ignored) {}
+        }
+
+        final String cleanSearch = (search != null && !search.trim().isEmpty()) ? search.trim().toLowerCase() : null;
+        final String cleanLocation = (location != null && !location.trim().isEmpty()) ? location.trim().toLowerCase() : null;
+        final com.jobportal.job_service.enums.JobType finalJobType = jobType;
+
+        List<Job> allJobs = jobRepository.findAll();
+
+        List<Job> filtered = allJobs.stream().filter(j -> {
+            boolean matchesSearch = cleanSearch == null || 
+                (j.getTitle() != null && j.getTitle().toLowerCase().contains(cleanSearch)) ||
+                (j.getDescription() != null && j.getDescription().toLowerCase().contains(cleanSearch));
+            
+            boolean matchesLocation = cleanLocation == null ||
+                (j.getLocation() != null && j.getLocation().toLowerCase().contains(cleanLocation));
+
+            boolean matchesType = true;
+            if (cleanType != null) {
+                if (finalJobType != null && j.getType() == finalJobType) {
+                    matchesType = true;
+                } else if (cleanType.equals("REMOTE") && j.getLocation() != null && j.getLocation().toLowerCase().contains("remote")) {
+                    matchesType = true;
+                } else {
+                    matchesType = false;
+                }
+            }
+
+            return matchesSearch && matchesLocation && matchesType;
+        }).toList();
+
+        return filtered.stream()
+                .map(JobMapper::entityToResDto)
+                .toList();
+    }
+
+    @Override
     public JobResponseDTO updateJob(Long JobId,JobRequestDTO request) {
         Job job = jobRepository.findById(JobId)
                 .orElseThrow(()-> new RuntimeException("Job not found"));
