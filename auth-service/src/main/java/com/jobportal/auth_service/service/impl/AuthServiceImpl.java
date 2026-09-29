@@ -31,6 +31,7 @@ public class AuthServiceImpl implements IAuthService {
                 .email(request.email())
                 .password(passwordEncoder.encode(request.password()))
                 .role(request.role())
+                .phone(request.phone())
                 .build();
         userRepository.save(user);
 

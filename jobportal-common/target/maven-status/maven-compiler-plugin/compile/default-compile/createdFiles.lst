@@ -1,0 +1,4 @@
+com\jobportal\events\JobAppliedEvent.class
+com\jobportal\events\JobPortalEvent.class
+com\jobportal\events\JobCreatedEvent.class
+com\jobportal\Main.class

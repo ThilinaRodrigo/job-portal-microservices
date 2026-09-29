@@ -11,17 +11,21 @@ import lombok.Setter;
 @NoArgsConstructor @AllArgsConstructor
 public class Employer {
 
-        @Id
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
-        private Long employerId;
+    @Id
+    private Long employerId;
 
-//        private Long userId;
-        private String employerName;
-        private String employerDescription;
-        private String employerLocation;
-        private String employerWebsite;
-        private String employerEmail;
-        private String contactPerson;
-        private String contactPhone;
+    private String employerName;
+
+    @Column(columnDefinition = "TEXT")
+    private String employerDescription;
+
+    private String employerLocation;
+    private String employerWebsite;
+    private String employerEmail;
+    private String contactPerson;
+    private String contactPhone;
+
+    @Column(columnDefinition = "TEXT")
+    private String logoUrl;
 
 }

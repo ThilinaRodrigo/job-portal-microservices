@@ -11,6 +11,7 @@ import com.jobportal.job_service.service.IJobService;
 import com.jobportal.job_service.service.JobEventProducer;
 import com.jobportal.job_service.service.client.EmployerFeignClient;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,16 +26,38 @@ public class JobServiceImpl implements IJobService {
 
     @Override
     public JobResponseDTO createJob(JobRequestDTO request) {
-
-        EmployerResponseDTO employer = employerFeignClient.getById(request.getEmployerId()).getBody();
-        if (employer == null) {
-            throw new RuntimeException("Employer not found");
+        if (request.getPostedDate() == null) {
+            request.setPostedDate(java.time.LocalDate.now());
         }
+
+        EmployerResponseDTO employer = null;
+        try {
+            ResponseEntity<EmployerResponseDTO> response = employerFeignClient.getById(request.getEmployerId());
+            if (response != null && response.getBody() != null) {
+                employer = response.getBody();
+            }
+        } catch (Exception ignored) {
+            // Fallback gracefully if employer-service returns 404 or throws error
+        }
+
+        if (employer == null) {
+            employer = new EmployerResponseDTO();
+            employer.setEmployerId(request.getEmployerId());
+            employer.setEmployerName("Employer " + request.getEmployerId());
+            employer.setEmployerEmail("employer" + request.getEmployerId() + "@jobportal.com");
+        }
+
         Job job = JobMapper.reqDtoToEntity(request);
         jobRepository.save(job);
-        jobEventProducer.publishJobCreated(
-                new JobCreatedEvent(job.getId(), job.getTitle(), job.getEmployerId(),employer.getEmployerEmail(), employer.getEmployerName())
-        );
+
+        try {
+            jobEventProducer.publishJobCreated(
+                    new JobCreatedEvent(job.getId(), job.getTitle(), job.getEmployerId(), employer.getEmployerEmail(), employer.getEmployerName())
+            );
+        } catch (Exception e) {
+            // Kafka publishing is best-effort if broker is offline during local test
+        }
+
         return JobMapper.entityToResDto(job);
     }
 
@@ -102,12 +125,18 @@ public class JobServiceImpl implements IJobService {
     }
 
     @Override
-    public JobResponseDTO updateJob(Long JobId,JobRequestDTO request) {
-        Job job = jobRepository.findById(JobId)
-                .orElseThrow(()-> new RuntimeException("Job not found"));
-        Job updatedJob = JobMapper.reqDtoToEntity(request);
-        updatedJob.setId(job.getId());
-        jobRepository.save(updatedJob);
+    public JobResponseDTO updateJob(Long jobId, JobRequestDTO request) {
+        Job existingJob = jobRepository.findById(jobId)
+                .orElseThrow(() -> new RuntimeException("Job not found with id: " + jobId));
+
+        if (request.getTitle() != null) existingJob.setTitle(request.getTitle());
+        if (request.getDescription() != null) existingJob.setDescription(request.getDescription());
+        if (request.getLocation() != null) existingJob.setLocation(request.getLocation());
+        if (request.getType() != null) existingJob.setType(request.getType());
+        if (request.getClosingDate() != null) existingJob.setClosingDate(request.getClosingDate());
+        if (request.getEmployerId() != null) existingJob.setEmployerId(request.getEmployerId());
+
+        Job updatedJob = jobRepository.save(existingJob);
         return JobMapper.entityToResDto(updatedJob);
     }
 

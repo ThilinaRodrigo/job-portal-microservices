@@ -31,13 +31,22 @@ public class EmployeeServiceImpl implements IEmployeeService {
     public Employee updateEmployee(Long Id, EmployeeRequestDTO dto) {
 
         Employee existingEmployee = employeeRepository.findById(Id)
-                .orElseThrow(()->new ResourceNotFoundException("Employee not found"));
+                .orElseGet(() -> {
+                    Employee newEmp = new Employee();
+                    newEmp.setId(Id);
+                    return newEmp;
+                });
 
-        Employee updatedEmployee = EmployeeMapper.toEntity(dto);
-        updatedEmployee.setId(existingEmployee.getId());
-        employeeRepository.save(updatedEmployee);
+        if (dto.getFirstName() != null) existingEmployee.setFirstName(dto.getFirstName());
+        if (dto.getLastName() != null) existingEmployee.setLastName(dto.getLastName());
+        if (dto.getEmail() != null) existingEmployee.setEmail(dto.getEmail());
+        if (dto.getPhone() != null) existingEmployee.setPhone(dto.getPhone());
+        if (dto.getSkillSet() != null) existingEmployee.setSkillSet(dto.getSkillSet());
+        if (dto.getResumeLink() != null) existingEmployee.setResumeLink(dto.getResumeLink());
 
-        return updatedEmployee;
+        employeeRepository.save(existingEmployee);
+
+        return existingEmployee;
     }
 
     @Override

@@ -5,6 +5,7 @@ import lombok.*;
 @Data
 public class EmployerRequestDTO {
 
+    private Long employerId;
     private String employerName;
     private String employerDescription;
     private String employerLocation;
@@ -12,5 +13,6 @@ public class EmployerRequestDTO {
     private String employerEmail;
     private String contactPerson;
     private String contactPhone;
+    private String logoUrl;
 
 }
