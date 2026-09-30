@@ -43,6 +43,11 @@ public class EmployeeServiceImpl implements IEmployeeService {
         if (dto.getPhone() != null) existingEmployee.setPhone(dto.getPhone());
         if (dto.getSkillSet() != null) existingEmployee.setSkillSet(dto.getSkillSet());
         if (dto.getResumeLink() != null) existingEmployee.setResumeLink(dto.getResumeLink());
+        if (dto.getProfilePictureUrl() != null) existingEmployee.setProfilePictureUrl(dto.getProfilePictureUrl());
+        if (dto.getBio() != null) existingEmployee.setBio(dto.getBio());
+        if (dto.getLocation() != null) existingEmployee.setLocation(dto.getLocation());
+        if (dto.getEducation() != null) existingEmployee.setEducation(dto.getEducation());
+        if (dto.getExperience() != null) existingEmployee.setExperience(dto.getExperience());
 
         employeeRepository.save(existingEmployee);
 
@@ -67,5 +72,55 @@ public class EmployeeServiceImpl implements IEmployeeService {
     @Override
     public List<Employee> getEmployees() {
         return employeeRepository.findAll();
+    }
+
+    @Override
+    public String uploadResume(Long id, org.springframework.web.multipart.MultipartFile file) {
+        try {
+            Employee employee = employeeRepository.findById(id)
+                    .orElseGet(() -> {
+                        Employee newEmp = new Employee();
+                        newEmp.setId(id);
+                        return newEmp;
+                    });
+            String fileName = "cv_" + id + "_" + file.getOriginalFilename();
+            java.nio.file.Path uploadPath = java.nio.file.Paths.get("uploads", "resumes");
+            if (!java.nio.file.Files.exists(uploadPath)) {
+                java.nio.file.Files.createDirectories(uploadPath);
+            }
+            java.nio.file.Path filePath = uploadPath.resolve(fileName);
+            java.nio.file.Files.copy(file.getInputStream(), filePath, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+            String fileUrl = "http://localhost:8081/uploads/resumes/" + fileName;
+            employee.setResumeLink(fileUrl);
+            employeeRepository.save(employee);
+            return fileUrl;
+        } catch (java.io.IOException e) {
+            throw new RuntimeException("Could not store resume file. Error: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public String uploadPhoto(Long id, org.springframework.web.multipart.MultipartFile file) {
+        try {
+            Employee employee = employeeRepository.findById(id)
+                    .orElseGet(() -> {
+                        Employee newEmp = new Employee();
+                        newEmp.setId(id);
+                        return newEmp;
+                    });
+            String fileName = "photo_" + id + "_" + file.getOriginalFilename();
+            java.nio.file.Path uploadPath = java.nio.file.Paths.get("uploads", "photos");
+            if (!java.nio.file.Files.exists(uploadPath)) {
+                java.nio.file.Files.createDirectories(uploadPath);
+            }
+            java.nio.file.Path filePath = uploadPath.resolve(fileName);
+            java.nio.file.Files.copy(file.getInputStream(), filePath, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+            String fileUrl = "http://localhost:8081/uploads/photos/" + fileName;
+            employee.setProfilePictureUrl(fileUrl);
+            employeeRepository.save(employee);
+            return fileUrl;
+        } catch (java.io.IOException e) {
+            throw new RuntimeException("Could not store photo file. Error: " + e.getMessage());
+        }
     }
 }

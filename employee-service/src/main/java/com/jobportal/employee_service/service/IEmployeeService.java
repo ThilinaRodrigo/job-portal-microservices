@@ -12,4 +12,6 @@ public interface IEmployeeService {
     Employee getEmployeeById(Long Id);
     void deleteEmployee(Long Id);
     List<Employee> getEmployees();
+    String uploadResume(Long id, org.springframework.web.multipart.MultipartFile file);
+    String uploadPhoto(Long id, org.springframework.web.multipart.MultipartFile file);
 }

@@ -16,7 +16,7 @@ public class JobApplication {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private  Long id;
+    private Long id;
 
     private Long jobId;
     private Long applicantId;
@@ -24,5 +24,16 @@ public class JobApplication {
 
     @Enumerated(EnumType.STRING)
     private ApplicationStatus status;
+
+    @Column(length = 1000)
+    private String resumeUrl;
+
+    @Column(columnDefinition = "TEXT")
+    private String coverLetter;
+
+    private String applicantName;
+    private String applicantEmail;
+    private String jobTitle;
+    private String companyName;
 
 }

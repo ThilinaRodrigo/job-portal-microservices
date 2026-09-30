@@ -32,23 +32,24 @@ public class JobApplicationServiceImpl implements IJobApplicationService {
     @Override
     public JobApplication applyForJob(JobApplicationRequestDTO dto) {
 
-        EmployeeResponseDTO emp = employeeFeignClient.getEmployeeById(dto.getApplicantId()).getBody();
-        JobResponseDTO job = jobFeignClient.getJobById(dto.getJobId()).getBody();
-        assert job != null;
-        EmployerResponseDTO employer = employerClient.getById(job.getEmployerId()).getBody();
+        JobApplication jobApp = JobApplicationMapper.toEntity(dto);
 
-        if (emp == null) {
-            throw new ResourceNotFoundException("Applicant Not Found");
+        try {
+            EmployeeResponseDTO emp = employeeFeignClient.getEmployeeById(dto.getApplicantId()).getBody();
+            JobResponseDTO job = jobFeignClient.getJobById(dto.getJobId()).getBody();
+            if (job != null) {
+                EmployerResponseDTO employer = employerClient.getById(job.getEmployerId()).getBody();
+                if (employer != null && emp != null) {
+                    applicationEventProducer.publishJobCreated(
+                        new com.jobportal.events.JobAppliedEvent(jobApp.getJobId(), employer.getEmployerName(), job.getTitle(), emp.getFirstName(), emp.getLastName(), emp.getEmail())
+                    );
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Non-critical Feign/Event notification error: " + e.getMessage());
         }
 
-        JobApplication jobApp = JobApplicationMapper.toEntity(dto);
         jobApplicationRepository.save(jobApp);
-        assert employer != null;
-        applicationEventProducer.publishJobCreated(
-                new com.jobportal.events.JobAppliedEvent(jobApp.getJobId(),employer.getEmployerName(), job.getTitle(), emp.getFirstName(), emp.getLastName(), emp.getEmail())
-        );
-        jobApp.setId(jobApp.getId());
-
         return jobApp;
     }
 
@@ -79,6 +80,11 @@ public class JobApplicationServiceImpl implements IJobApplicationService {
         jobApplicationRepository.save(jobApplication);
 
         return jobApplication;
+    }
+
+    @Override
+    public List<JobApplication> getAllJobApplications() {
+        return jobApplicationRepository.findAll();
     }
 
 }

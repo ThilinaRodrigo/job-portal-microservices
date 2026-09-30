@@ -16,6 +16,11 @@ public class EmployeeMapper {
         employee.setPhone(dto.getPhone());
         employee.setSkillSet(dto.getSkillSet());
         employee.setResumeLink(dto.getResumeLink());
+        employee.setProfilePictureUrl(dto.getProfilePictureUrl());
+        employee.setBio(dto.getBio());
+        employee.setLocation(dto.getLocation());
+        employee.setEducation(dto.getEducation());
+        employee.setExperience(dto.getExperience());
         return employee;
     }
 }

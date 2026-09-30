@@ -12,4 +12,9 @@ public class EmployeeRequestDTO {
     private String phone;
     private String skillSet;
     private String resumeLink;
+    private String profilePictureUrl;
+    private String bio;
+    private String location;
+    private String education;
+    private String experience;
 }

@@ -12,4 +12,5 @@ public interface IJobApplicationService {
     List<JobApplication> getJobApplicationsByApplicantId(Long applicantId);
     JobApplication getApplicationById(Long applicationId);
     JobApplication updateApplicationStatus(Long applicationId, String status);
+    List<JobApplication> getAllJobApplications();
 }

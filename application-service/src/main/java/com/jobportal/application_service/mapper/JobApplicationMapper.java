@@ -11,8 +11,14 @@ public class JobApplicationMapper {
         JobApplication entity = new JobApplication();
         entity.setJobId(dto.getJobId());
         entity.setApplicantId(dto.getApplicantId());
-        entity.setStatus(dto.getStatus());
+        entity.setStatus(dto.getStatus() != null ? dto.getStatus() : com.jobportal.application_service.enums.ApplicationStatus.PENDING);
         entity.setAppliedDate(LocalDate.now());
+        entity.setResumeUrl(dto.getResumeUrl());
+        entity.setCoverLetter(dto.getCoverLetter());
+        entity.setApplicantName(dto.getApplicantName());
+        entity.setApplicantEmail(dto.getApplicantEmail());
+        entity.setJobTitle(dto.getJobTitle());
+        entity.setCompanyName(dto.getCompanyName());
         return entity;
     }
 }
