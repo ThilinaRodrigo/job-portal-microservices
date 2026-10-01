@@ -24,7 +24,10 @@ public class RouteValidator {
             return false;
         }
 
-        if (method.equalsIgnoreCase("GET") && (path.contains("/jobs") || path.contains("/jobportal/jobs"))) {
+        if (method.equalsIgnoreCase("GET") && (
+                path.contains("/jobs") || path.contains("/jobportal/jobs") ||
+                path.contains("/employers") || path.contains("/jobportal/employers")
+        )) {
             return false;
         }
 

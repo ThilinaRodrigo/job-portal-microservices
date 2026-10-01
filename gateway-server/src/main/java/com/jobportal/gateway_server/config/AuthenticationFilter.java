@@ -74,7 +74,8 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
                     new RouteRule("GET", "/job-applications"),
                     new RouteRule("GET", "/applications"),
 
-                    new RouteRule("GET", "/jobs")
+                    new RouteRule("GET", "/jobs"),
+                    new RouteRule("GET", "/employers")
             ),
 
             "JOBSEEKER", List.of(
@@ -90,7 +91,8 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
                     new RouteRule("GET", "/job-applications"),
                     new RouteRule("GET", "/applications"),
 
-                    new RouteRule("GET", "/jobs")
+                    new RouteRule("GET", "/jobs"),
+                    new RouteRule("GET", "/employers")
             )
     );
 

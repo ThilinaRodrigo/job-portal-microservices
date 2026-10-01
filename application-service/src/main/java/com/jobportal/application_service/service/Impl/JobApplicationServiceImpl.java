@@ -76,10 +76,20 @@ public class JobApplicationServiceImpl implements IJobApplicationService {
         JobApplication jobApplication = jobApplicationRepository.findById(applicationId)
                 .orElseThrow(()-> new ResourceNotFoundException("Application Not Found"));
 
-        jobApplication.setStatus(ApplicationStatus.valueOf(status));
-        jobApplicationRepository.save(jobApplication);
+        String normalizedStatus = status != null ? status.toUpperCase().trim().replace(" ", "_") : "APPLIED";
+        if ("PENDING".equals(normalizedStatus)) {
+            normalizedStatus = "APPLIED";
+        }
 
-        return jobApplication;
+        try {
+            jobApplication.setStatus(ApplicationStatus.valueOf(normalizedStatus));
+            return jobApplicationRepository.save(jobApplication);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Invalid status: " + status);
+        } catch (org.springframework.dao.DataIntegrityViolationException e) {
+            jobApplication.setStatus(ApplicationStatus.APPLIED);
+            return jobApplicationRepository.save(jobApplication);
+        }
     }
 
     @Override

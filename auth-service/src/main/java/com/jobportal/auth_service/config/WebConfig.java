@@ -1,4 +1,4 @@
-package com.jobportal.employer_service.config;
+package com.jobportal.auth_service.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;

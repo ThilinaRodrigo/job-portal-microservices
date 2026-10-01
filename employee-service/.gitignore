@@ -4,6 +4,14 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
+# Uploaded Files & Resumes/Photos/Logos
+uploads/
+**/uploads/
+**/uploads/**
+*.pdf
+*.doc
+*.docx
+
 ### STS ###
 .apt_generated
 .classpath

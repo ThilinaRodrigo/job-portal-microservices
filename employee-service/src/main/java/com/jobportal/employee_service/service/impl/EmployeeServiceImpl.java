@@ -90,7 +90,7 @@ public class EmployeeServiceImpl implements IEmployeeService {
             }
             java.nio.file.Path filePath = uploadPath.resolve(fileName);
             java.nio.file.Files.copy(file.getInputStream(), filePath, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
-            String fileUrl = "http://localhost:8081/uploads/resumes/" + fileName;
+            String fileUrl = "http://localhost:8084/uploads/resumes/" + fileName;
             employee.setResumeLink(fileUrl);
             employeeRepository.save(employee);
             return fileUrl;
@@ -115,7 +115,7 @@ public class EmployeeServiceImpl implements IEmployeeService {
             }
             java.nio.file.Path filePath = uploadPath.resolve(fileName);
             java.nio.file.Files.copy(file.getInputStream(), filePath, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
-            String fileUrl = "http://localhost:8081/uploads/photos/" + fileName;
+            String fileUrl = "http://localhost:8084/uploads/photos/" + fileName;
             employee.setProfilePictureUrl(fileUrl);
             employeeRepository.save(employee);
             return fileUrl;

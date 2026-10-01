@@ -5,6 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.concurrent.CompletableFuture;
+
 @Service
 @RequiredArgsConstructor
 public class ApplicationEventProducer {
@@ -12,7 +14,13 @@ public class ApplicationEventProducer {
     private final KafkaTemplate<String, Object> kafkaTemplate;
 
     public void publishJobCreated(JobPortalEvent event) {
-        kafkaTemplate.send("job-applied-topic", event);
+        CompletableFuture.runAsync(() -> {
+            try {
+                kafkaTemplate.send("job-applied-topic", event);
+            } catch (Exception e) {
+                System.err.println("Non-critical Kafka notification error: " + e.getMessage());
+            }
+        });
     }
 }
 
