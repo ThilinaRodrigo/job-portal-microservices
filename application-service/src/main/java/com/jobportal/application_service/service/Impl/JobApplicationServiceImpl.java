@@ -41,7 +41,15 @@ public class JobApplicationServiceImpl implements IJobApplicationService {
                 EmployerResponseDTO employer = employerClient.getById(job.getEmployerId()).getBody();
                 if (employer != null && emp != null) {
                     applicationEventProducer.publishJobCreated(
-                        new com.jobportal.events.JobAppliedEvent(jobApp.getJobId(), employer.getEmployerName(), job.getTitle(), emp.getFirstName(), emp.getLastName(), emp.getEmail())
+                        new com.jobportal.events.JobAppliedEvent(
+                            jobApp.getJobId(), 
+                            employer.getEmployerName(), 
+                            employer.getEmployerEmail(), 
+                            job.getTitle(), 
+                            emp.getFirstName(), 
+                            emp.getLastName(), 
+                            emp.getEmail()
+                        )
                     );
                 }
             }

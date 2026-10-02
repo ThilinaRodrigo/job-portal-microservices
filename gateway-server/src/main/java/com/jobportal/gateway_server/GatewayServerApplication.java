@@ -85,6 +85,14 @@ public class GatewayServerApplication {
 						.filters(f -> f.stripPrefix(1))
 						.uri("lb://AUTH-SERVICE"))
 
+				.route(p -> p
+						.path("/jobportal/notifications/**")
+						.filters(f -> f
+								.stripPrefix(1)
+								.filter(authenticationFilter.apply(new AuthenticationFilter.Config()))
+						)
+						.uri("lb://NOTIFICATION-SERVICE"))
+
 				.build();
 	}
 }

@@ -38,7 +38,9 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
                     new RouteRule("PUT", "/jobs"),
                     new RouteRule("DELETE", "/jobs"),
                     new RouteRule("GET", "/job-applications"),
-                    new RouteRule("GET", "/applications")
+                    new RouteRule("GET", "/applications"),
+                    new RouteRule("GET", "/notifications"),
+                    new RouteRule("PUT", "/notifications")
             ),
 
             "EMPLOYER", List.of(
@@ -58,7 +60,11 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
                     new RouteRule("GET", "/job-applications"),
                     new RouteRule("GET", "/applications"),
                     new RouteRule("PUT", "/job-applications"), // update status
-                    new RouteRule("PUT", "/applications")
+                    new RouteRule("PUT", "/applications"),
+
+                    // Notifications
+                    new RouteRule("GET", "/notifications"),
+                    new RouteRule("PUT", "/notifications")
             ),
 
             "EMPLOYEE", List.of(
@@ -75,7 +81,11 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
                     new RouteRule("GET", "/applications"),
 
                     new RouteRule("GET", "/jobs"),
-                    new RouteRule("GET", "/employers")
+                    new RouteRule("GET", "/employers"),
+
+                    // Notifications
+                    new RouteRule("GET", "/notifications"),
+                    new RouteRule("PUT", "/notifications")
             ),
 
             "JOBSEEKER", List.of(
@@ -92,7 +102,11 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
                     new RouteRule("GET", "/applications"),
 
                     new RouteRule("GET", "/jobs"),
-                    new RouteRule("GET", "/employers")
+                    new RouteRule("GET", "/employers"),
+
+                    // Notifications
+                    new RouteRule("GET", "/notifications"),
+                    new RouteRule("PUT", "/notifications")
             )
     );
 
