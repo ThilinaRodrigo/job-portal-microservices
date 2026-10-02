@@ -23,6 +23,7 @@ public class JobApplication {
     private LocalDate appliedDate;
 
     @Enumerated(EnumType.STRING)
+    @Column(length = 50)
     private ApplicationStatus status;
 
     @Column(length = 1000)

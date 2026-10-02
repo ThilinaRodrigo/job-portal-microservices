@@ -1,5 +1,6 @@
 package com.jobportal.notification_service;
 
+import com.jobportal.events.JobApplicationStatusChangedEvent;
 import com.jobportal.events.JobAppliedEvent;
 import com.jobportal.events.JobCreatedEvent;
 import com.jobportal.events.JobPortalEvent;
@@ -20,7 +21,7 @@ public class NotificationListener {
     private final INotificationService notificationService;
 
     @KafkaListener(
-            topics = { "job-created-topic", "job-applied-topic" },
+            topics = { "job-created-topic", "job-applied-topic", "job-status-topic" },
             groupId = "notification-group"
     )
     public void consume(JobPortalEvent event) {
@@ -30,6 +31,8 @@ public class NotificationListener {
             handleJobCreated(created);
         } else if (event instanceof JobAppliedEvent applied) {
             handleJobApplied(applied);
+        } else if (event instanceof JobApplicationStatusChangedEvent statusChanged) {
+            handleStatusChanged(statusChanged);
         } else {
             log.warn("Unknown event type: {}", event.getClass());
         }
@@ -87,6 +90,26 @@ public class NotificationListener {
                     .isRead(false)
                     .createdAt(LocalDateTime.now())
                     .relatedEntityId(event.getJobId())
+                    .build();
+
+            notificationService.saveNotification(candidateNotif);
+        }
+    }
+
+    private void handleStatusChanged(JobApplicationStatusChangedEvent event) {
+        log.info("Application status change event received: Application ID {} -> {}", event.getApplicationId(), event.getNewStatus());
+
+        if (event.getApplicantEmail() != null && !event.getApplicantEmail().isEmpty()) {
+            String statusFormatted = event.getNewStatus() != null ? event.getNewStatus().replace("_", " ") : "UPDATED";
+            Notification candidateNotif = Notification.builder()
+                    .recipientEmail(event.getApplicantEmail())
+                    .recipientRole("JOBSEEKER")
+                    .title("Application Status: " + statusFormatted)
+                    .message("Your application status for \"" + event.getJobTitle() + "\" has been updated to " + statusFormatted + ".")
+                    .type("APPLICATION_STATUS")
+                    .isRead(false)
+                    .createdAt(LocalDateTime.now())
+                    .relatedEntityId(event.getApplicationId())
                     .build();
 
             notificationService.saveNotification(candidateNotif);

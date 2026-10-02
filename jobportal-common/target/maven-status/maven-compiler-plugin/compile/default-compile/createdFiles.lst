@@ -1,5 +1,7 @@
+com\jobportal\events\JobApplicationStatusChangedEvent$JobApplicationStatusChangedEventBuilder.class
+com\jobportal\events\JobCreatedEvent.class
 com\jobportal\events\JobAppliedEvent.class
 com\jobportal\events\JobPortalEvent.class
+com\jobportal\events\JobApplicationStatusChangedEvent.class
 com\jobportal\events\JobAppliedEvent$JobAppliedEventBuilder.class
-com\jobportal\events\JobCreatedEvent.class
 com\jobportal\Main.class
