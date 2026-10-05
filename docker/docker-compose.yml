@@ -4,7 +4,7 @@ services:
 
   # ------------------ EUREKA ------------------
   eureka-server:
-    build: ./eureka-server
+    build: ../eureka-server
     container_name: eureka-server
     ports:
       - "8070:8070"
@@ -14,7 +14,7 @@ services:
 
   # ------------------ AUTH SERVICE ------------------
   auth-service:
-    build: ./auth-service
+    build: ../auth-service
     container_name: auth-service
     depends_on:
       - auth-db
@@ -49,8 +49,8 @@ services:
   job-service:
 
     build:
-      context: .
-      dockerfile: job-service/Dockerfile
+      context: ..
+      dockerfile: ../job-service/Dockerfile
     container_name: job-service
     depends_on:
       - job-db
@@ -84,8 +84,8 @@ services:
   # ------------------ EMPLOYEE SERVICE ------------------
   employee-service:
     build:
-      context: .
-      dockerfile: employee-service/Dockerfile
+      context: ..
+      dockerfile: ../employee-service/Dockerfile
     container_name: employee-service
     depends_on:
       - employee-db
@@ -119,8 +119,8 @@ services:
   # ------------------ EMPLOYER SERVICE ------------------
   employer-service:
     build:
-      context: .
-      dockerfile: employer-service/Dockerfile
+      context: ..
+      dockerfile: ../employer-service/Dockerfile
     container_name: employer-service
     depends_on:
       - employer-db
@@ -154,8 +154,8 @@ services:
   # ------------------ APPLICATION SERVICE ------------------
   application-service:
     build:
-      context: .
-      dockerfile: application-service/Dockerfile
+      context: ..
+      dockerfile: ../application-service/Dockerfile
     container_name: application-service
     depends_on:
       - application-db
@@ -222,7 +222,7 @@ services:
 
   # ------------------ GATEWAY ------------------
   gateway-server:
-    build: ./gateway-server
+    build: ../gateway-server
     container_name: gateway-server
     ports:
       - "8072:8072"

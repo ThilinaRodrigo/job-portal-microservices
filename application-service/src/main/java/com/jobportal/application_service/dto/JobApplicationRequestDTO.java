@@ -8,4 +8,10 @@ public class JobApplicationRequestDTO {
     private Long jobId;
     private Long applicantId;
     private ApplicationStatus status;
+    private String resumeUrl;
+    private String coverLetter;
+    private String applicantName;
+    private String applicantEmail;
+    private String jobTitle;
+    private String companyName;
 }

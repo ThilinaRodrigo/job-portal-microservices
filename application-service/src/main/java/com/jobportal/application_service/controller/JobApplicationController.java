@@ -33,4 +33,9 @@ public class JobApplicationController {
     public ResponseEntity<JobApplication> updateApplicationStatus(@PathVariable Long applicationId, @RequestParam String status) {
         return ResponseEntity.ok(jobApplicationService.updateApplicationStatus(applicationId, status));
     }
+
+    @GetMapping
+    public ResponseEntity<java.util.List<JobApplication>> getAllApplications() {
+        return ResponseEntity.ok(jobApplicationService.getAllJobApplications());
+    }
 }

@@ -2,6 +2,7 @@ package com.jobportal.application_service.mapper;
 
 import com.jobportal.application_service.dto.JobApplicationRequestDTO;
 import com.jobportal.application_service.entity.JobApplication;
+import com.jobportal.application_service.enums.ApplicationStatus;
 
 import java.time.LocalDate;
 
@@ -11,8 +12,18 @@ public class JobApplicationMapper {
         JobApplication entity = new JobApplication();
         entity.setJobId(dto.getJobId());
         entity.setApplicantId(dto.getApplicantId());
-        entity.setStatus(dto.getStatus());
+        ApplicationStatus status = dto.getStatus();
+        if (status == null || status == ApplicationStatus.PENDING) {
+            status = ApplicationStatus.APPLIED;
+        }
+        entity.setStatus(status);
         entity.setAppliedDate(LocalDate.now());
+        entity.setResumeUrl(dto.getResumeUrl());
+        entity.setCoverLetter(dto.getCoverLetter());
+        entity.setApplicantName(dto.getApplicantName());
+        entity.setApplicantEmail(dto.getApplicantEmail());
+        entity.setJobTitle(dto.getJobTitle());
+        entity.setCompanyName(dto.getCompanyName());
         return entity;
     }
 }

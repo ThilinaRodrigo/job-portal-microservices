@@ -19,7 +19,10 @@ public class Job {
     private Long employerId;
 
     private String title;
+
+    @Column(columnDefinition = "TEXT")
     private String description;
+
     private String location;
 
     @Enumerated(EnumType.STRING)

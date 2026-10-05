@@ -32,23 +32,32 @@ public class JobApplicationServiceImpl implements IJobApplicationService {
     @Override
     public JobApplication applyForJob(JobApplicationRequestDTO dto) {
 
-        EmployeeResponseDTO emp = employeeFeignClient.getEmployeeById(dto.getApplicantId()).getBody();
-        JobResponseDTO job = jobFeignClient.getJobById(dto.getJobId()).getBody();
-        assert job != null;
-        EmployerResponseDTO employer = employerClient.getById(job.getEmployerId()).getBody();
+        JobApplication jobApp = JobApplicationMapper.toEntity(dto);
 
-        if (emp == null) {
-            throw new ResourceNotFoundException("Applicant Not Found");
+        try {
+            EmployeeResponseDTO emp = employeeFeignClient.getEmployeeById(dto.getApplicantId()).getBody();
+            JobResponseDTO job = jobFeignClient.getJobById(dto.getJobId()).getBody();
+            if (job != null) {
+                EmployerResponseDTO employer = employerClient.getById(job.getEmployerId()).getBody();
+                if (employer != null && emp != null) {
+                    applicationEventProducer.publishJobCreated(
+                        new com.jobportal.events.JobAppliedEvent(
+                            jobApp.getJobId(), 
+                            employer.getEmployerName(), 
+                            employer.getEmployerEmail(), 
+                            job.getTitle(), 
+                            emp.getFirstName(), 
+                            emp.getLastName(), 
+                            emp.getEmail()
+                        )
+                    );
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Non-critical Feign/Event notification error: " + e.getMessage());
         }
 
-        JobApplication jobApp = JobApplicationMapper.toEntity(dto);
         jobApplicationRepository.save(jobApp);
-        assert employer != null;
-        applicationEventProducer.publishJobCreated(
-                new com.jobportal.events.JobAppliedEvent(jobApp.getJobId(),employer.getEmployerName(), job.getTitle(), emp.getFirstName(), emp.getLastName(), emp.getEmail())
-        );
-        jobApp.setId(jobApp.getId());
-
         return jobApp;
     }
 
@@ -75,10 +84,68 @@ public class JobApplicationServiceImpl implements IJobApplicationService {
         JobApplication jobApplication = jobApplicationRepository.findById(applicationId)
                 .orElseThrow(()-> new ResourceNotFoundException("Application Not Found"));
 
-        jobApplication.setStatus(ApplicationStatus.valueOf(status));
-        jobApplicationRepository.save(jobApplication);
+        String oldStatus = jobApplication.getStatus() != null ? jobApplication.getStatus().name() : "APPLIED";
+        String normalizedStatus = status != null ? status.toUpperCase().trim().replace(" ", "_") : "APPLIED";
 
-        return jobApplication;
+        JobApplication updatedApp;
+        try {
+            jobApplication.setStatus(ApplicationStatus.valueOf(normalizedStatus));
+            updatedApp = jobApplicationRepository.save(jobApplication);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Invalid status: " + status);
+        }
+
+        try {
+            String applicantEmail = updatedApp.getApplicantEmail();
+            String jobTitle = updatedApp.getJobTitle();
+            String employerName = updatedApp.getCompanyName();
+
+            if (applicantEmail == null || jobTitle == null) {
+                try {
+                    EmployeeResponseDTO emp = employeeFeignClient.getEmployeeById(updatedApp.getApplicantId()).getBody();
+                    if (emp != null && applicantEmail == null) applicantEmail = emp.getEmail();
+                } catch (Exception ignored) {}
+                try {
+                    JobResponseDTO job = jobFeignClient.getJobById(updatedApp.getJobId()).getBody();
+                    if (job != null) {
+                        if (jobTitle == null) jobTitle = job.getTitle();
+                        if (employerName == null && job.getEmployerId() != null) {
+                            try {
+                                EmployerResponseDTO employer = employerClient.getById(job.getEmployerId()).getBody();
+                                if (employer != null) employerName = employer.getEmployerName();
+                            } catch (Exception ignored) {}
+                        }
+                    }
+                } catch (Exception ignored) {}
+            }
+
+            if (applicantEmail != null && !applicantEmail.isEmpty()) {
+                com.jobportal.events.JobApplicationStatusChangedEvent statusEvent =
+                        com.jobportal.events.JobApplicationStatusChangedEvent.builder()
+                                .applicationId(updatedApp.getId())
+                                .jobId(updatedApp.getJobId())
+                                .jobTitle(jobTitle != null ? jobTitle : "Position")
+                                .applicantId(updatedApp.getApplicantId())
+                                .applicantEmail(applicantEmail)
+                                .oldStatus(oldStatus)
+                                .newStatus(updatedApp.getStatus().name())
+                                .employerName(employerName != null ? employerName : "Employer")
+                                .build();
+                applicationEventProducer.publishEvent("job-status-topic", statusEvent);
+                System.out.println("Status change Kafka event published for recipient: " + applicantEmail);
+            } else {
+                System.out.println("Could not determine applicant email to send status notification event.");
+            }
+        } catch (Exception e) {
+            System.err.println("Error publishing status change Kafka event: " + e.getMessage());
+        }
+
+        return updatedApp;
+    }
+
+    @Override
+    public List<JobApplication> getAllJobApplications() {
+        return jobApplicationRepository.findAll();
     }
 
 }

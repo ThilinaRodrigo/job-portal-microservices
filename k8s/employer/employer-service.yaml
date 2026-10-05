@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: employer-service
+  namespace: job-portal
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: employer-service
+  template:
+    metadata:
+      labels:
+        app: employer-service
+    spec:
+      containers:
+        - name: application
+          image: thilinarodrigo/employer-service:latest
+          ports:
+            - containerPort: 8083
+          env:
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:postgresql://employer-db:5432/employer_db
+            - name: SPRING_DATASOURCE_USERNAME
+              value: postgres
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: postgres
+            - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+              value: http://eureka-server:8070/eureka/
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: employer-service
+  namespace: job-portal
+spec:
+  selector:
+    app: employer-service
+  ports:
+    - port: 80
+      targetPort: 8083
+
+

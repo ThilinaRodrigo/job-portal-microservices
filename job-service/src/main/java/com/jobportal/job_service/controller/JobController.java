@@ -36,7 +36,14 @@ public class JobController {
     }
 
     @GetMapping
-    public ResponseEntity<List<JobResponseDTO>> getAllJobs() {
+    public ResponseEntity<List<JobResponseDTO>> getAllJobs(
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) String location,
+            @RequestParam(required = false) String type) {
+        if (search != null || location != null || type != null) {
+            List<JobResponseDTO> filteredJobs = jobService.searchJobs(search, location, type);
+            return ResponseEntity.ok(filteredJobs);
+        }
         List<JobResponseDTO> jobs = jobService.getAllJobs();
         return ResponseEntity.ok(jobs);
     }
@@ -45,5 +52,11 @@ public class JobController {
     public ResponseEntity<JobResponseDTO> updateJob(@PathVariable Long jobId, @RequestBody JobRequestDTO jobRequestDTO) {
         JobResponseDTO updatedJob = jobService.updateJob(jobId, jobRequestDTO);
         return ResponseEntity.ok(updatedJob);
+    }
+
+    @DeleteMapping("/{jobId}")
+    public ResponseEntity<Void> deleteJob(@PathVariable Long jobId) {
+        jobService.deleteJob(jobId);
+        return ResponseEntity.noContent().build();
     }
 }

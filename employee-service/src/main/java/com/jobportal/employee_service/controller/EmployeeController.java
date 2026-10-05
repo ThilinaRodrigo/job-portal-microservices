@@ -24,8 +24,12 @@ public class EmployeeController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Employee> getEmployeeById(@PathVariable Long id) {
-        Employee employee = service.getEmployeeById(id);
-        return ResponseEntity.ok(employee);
+        try {
+            Employee employee = service.getEmployeeById(id);
+            return ResponseEntity.ok(employee);
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PutMapping("/{id}")
@@ -44,5 +48,17 @@ public class EmployeeController {
     public ResponseEntity<java.util.List<Employee>> getAllEmployees() {
         List<Employee> employees = service.getEmployees();
         return ResponseEntity.ok(employees);
+    }
+
+    @PostMapping("/{id}/resume")
+    public ResponseEntity<String> uploadResume(@PathVariable Long id, @RequestParam("file") org.springframework.web.multipart.MultipartFile file) {
+        String resumeUrl = service.uploadResume(id, file);
+        return ResponseEntity.ok(resumeUrl);
+    }
+
+    @PostMapping("/{id}/photo")
+    public ResponseEntity<String> uploadPhoto(@PathVariable Long id, @RequestParam("file") org.springframework.web.multipart.MultipartFile file) {
+        String photoUrl = service.uploadPhoto(id, file);
+        return ResponseEntity.ok(photoUrl);
     }
 }

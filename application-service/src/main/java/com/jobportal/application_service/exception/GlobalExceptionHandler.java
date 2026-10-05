@@ -34,26 +34,40 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(validationErrors, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> handleAllExceptions(Exception ex, WebRequest request) {
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ErrorResponseDto> handleIllegalArgumentException(IllegalArgumentException ex, WebRequest request) {
+        ex.printStackTrace();
         ErrorResponseDto errorResponse = new ErrorResponseDto(
                 request.getDescription(false),
                 ex.getMessage(),
-                HttpStatus.INTERNAL_SERVER_ERROR,
+                HttpStatus.BAD_REQUEST,
                 java.time.LocalDateTime.now()
         );
-        return new ResponseEntity(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<String> handleResourceNotFoundException(Exception ex, WebRequest request) {
+    public ResponseEntity<ErrorResponseDto> handleResourceNotFoundException(ResourceNotFoundException ex, WebRequest request) {
+        ex.printStackTrace();
+        ErrorResponseDto errorResponse = new ErrorResponseDto(
+                request.getDescription(false),
+                ex.getMessage(),
+                HttpStatus.NOT_FOUND,
+                java.time.LocalDateTime.now()
+        );
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponseDto> handleAllExceptions(Exception ex, WebRequest request) {
+        ex.printStackTrace();
         ErrorResponseDto errorResponse = new ErrorResponseDto(
                 request.getDescription(false),
                 ex.getMessage(),
                 HttpStatus.INTERNAL_SERVER_ERROR,
                 java.time.LocalDateTime.now()
         );
-        return new ResponseEntity(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
 

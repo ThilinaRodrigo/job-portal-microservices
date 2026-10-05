@@ -31,7 +31,17 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
     private final Map<String, List<RouteRule>> ROLE_ACCESS = Map.of(
 
             "ADMIN", List.of(
-                    new RouteRule("GET", "/employees")
+                    new RouteRule("GET", "/employees"),
+                    new RouteRule("GET", "/employers"),
+                    new RouteRule("GET", "/jobs"),
+                    new RouteRule("POST", "/jobs"),
+                    new RouteRule("PUT", "/jobs"),
+                    new RouteRule("DELETE", "/jobs"),
+                    new RouteRule("GET", "/job-applications"),
+                    new RouteRule("GET", "/applications"),
+                    new RouteRule("GET", "/notifications"),
+                    new RouteRule("PUT", "/notifications"),
+                    new RouteRule("POST", "/auth/change-password")
             ),
 
             "EMPLOYER", List.of(
@@ -44,10 +54,19 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
                     // Job management
                     new RouteRule("POST", "/jobs"),     // create job
                     new RouteRule("PUT", "/jobs"),      // update job
+                    new RouteRule("GET", "/jobs"),
+                    new RouteRule("DELETE", "/jobs"),   // delete job
 
                     // Applications
-                    new RouteRule("GET", "/job-applications/job"),
-                    new RouteRule("PUT", "/job-applications") // update status
+                    new RouteRule("GET", "/job-applications"),
+                    new RouteRule("GET", "/applications"),
+                    new RouteRule("PUT", "/job-applications"), // update status
+                    new RouteRule("PUT", "/applications"),
+
+                    // Notifications
+                    new RouteRule("GET", "/notifications"),
+                    new RouteRule("PUT", "/notifications"),
+                    new RouteRule("POST", "/auth/change-password")
             ),
 
             "EMPLOYEE", List.of(
@@ -59,9 +78,39 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
 
                     // Job applications
                     new RouteRule("POST", "/job-applications"),
-                    new RouteRule("GET", "/job-applications/applicant"),
+                    new RouteRule("POST", "/applications"),
+                    new RouteRule("GET", "/job-applications"),
+                    new RouteRule("GET", "/applications"),
 
-                    new RouteRule("GET", "/jobs")
+                    new RouteRule("GET", "/jobs"),
+                    new RouteRule("GET", "/employers"),
+
+                    // Notifications
+                    new RouteRule("GET", "/notifications"),
+                    new RouteRule("PUT", "/notifications"),
+                    new RouteRule("POST", "/auth/change-password")
+            ),
+
+            "JOBSEEKER", List.of(
+                    // Candidate profile
+                    new RouteRule("POST", "/employees"),
+                    new RouteRule("GET", "/employees"),
+                    new RouteRule("PUT", "/employees"),
+                    new RouteRule("DELETE", "/employees"),
+
+                    // Job applications
+                    new RouteRule("POST", "/job-applications"),
+                    new RouteRule("POST", "/applications"),
+                    new RouteRule("GET", "/job-applications"),
+                    new RouteRule("GET", "/applications"),
+
+                    new RouteRule("GET", "/jobs"),
+                    new RouteRule("GET", "/employers"),
+
+                    // Notifications
+                    new RouteRule("GET", "/notifications"),
+                    new RouteRule("PUT", "/notifications"),
+                    new RouteRule("POST", "/auth/change-password")
             )
     );
 
@@ -88,23 +137,22 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
                     Claims claims = jwtUtil.validateAndExtract(token);
 
                     String role = claims.get("role", String.class);
+                    if (role != null) {
+                        role = role.toUpperCase();
+                    }
                     String email = claims.getSubject();
                     String path = exchange.getRequest().getURI().getPath();
                     String method = exchange.getRequest().getMethod().name();
 
                     System.out.println("ROLE: " + role + " PATH: " + path + " METHOD: " + method);
 
+                    String normalizedPath = path.startsWith("/jobportal") ? path.substring(10) : path;
+
                     boolean allowed = false;
 
-                    if (ROLE_ACCESS.containsKey(role)) {
+                    if (role != null && ROLE_ACCESS.containsKey(role)) {
                         for (RouteRule rule : ROLE_ACCESS.get(role)) {
-
-                            boolean pathMatch = path.startsWith(rule.getPath());
-
-                            if (rule.getPath().equals("/jobportal/applications")
-                                    && path.contains("/status")) {
-                                pathMatch = true;
-                            }
+                            boolean pathMatch = normalizedPath.startsWith(rule.getPath());
 
                             if (pathMatch && method.equalsIgnoreCase(rule.getMethod())) {
                                 allowed = true;

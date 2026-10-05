@@ -24,8 +24,12 @@ public class EmployerController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Employer> getById(@PathVariable Long id) {
-        Employer employer = employerService.getEmployerById(id);
-        return ResponseEntity.ok(employer);
+        try {
+            Employer employer = employerService.getEmployerById(id);
+            return ResponseEntity.ok(employer);
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PutMapping("/{id}")
@@ -40,13 +44,9 @@ public class EmployerController {
         return ResponseEntity.noContent().build();
     }
 
-//    @PostMapping("/jobs/create")
-//    public ResponseEntity<?> createJob(@RequestBody JobRequestDTO jobRequestDTO) {
-//        return jobFeignClient.createJob(jobRequestDTO);
-//    }
-//
-//    @PutMapping("jobs/{jobId}")
-//    public ResponseEntity<JobResponseDTO> updateJob(@PathVariable Long jobId, @RequestBody JobRequestDTO jobRequestDTO){
-//        return jobFeignClient.updateJob(jobId, jobRequestDTO);
-//    }
+    @PostMapping("/{id}/logo")
+    public ResponseEntity<String> uploadLogo(@PathVariable Long id, @RequestParam("file") org.springframework.web.multipart.MultipartFile file) {
+        String logoUrl = employerService.uploadLogo(id, file);
+        return ResponseEntity.ok(logoUrl);
+    }
 }

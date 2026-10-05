@@ -26,6 +26,8 @@ public class User extends BaseEntity {
     @Size(max = 30)
     private String email;
 
+    private String phone;
+
     private String password;
 
     @Enumerated(EnumType.STRING)

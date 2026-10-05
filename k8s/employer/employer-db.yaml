@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: employer-db
+  namespace: job-portal
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: employer-db
+  template:
+    metadata:
+      labels:
+        app: employer-db
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:15
+          env:
+            - name: POSTGRES_DB
+              value: employer_db
+            - name: POSTGRES_USER
+              value: postgres
+            - name: POSTGRES_PASSWORD
+              value: postgres
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: employer-db
+  namespace: job-portal
+spec:
+  selector:
+    app: employer-db
+  ports:
+    - port: 5432

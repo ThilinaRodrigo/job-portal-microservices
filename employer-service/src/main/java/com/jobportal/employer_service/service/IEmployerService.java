@@ -12,5 +12,6 @@ public interface IEmployerService {
     List<Employer> getAllEmployers();
     Employer updateEmployer(Long employerId, EmployerRequestDTO employerRequestDTO);
     void deleteEmployer(Long employerId);
+    String uploadLogo(Long employerId, org.springframework.web.multipart.MultipartFile file);
 
 }

@@ -9,6 +9,9 @@ public class EmployerMapper {
 
         Employer employer = new Employer();
 
+        if (dto.getEmployerId() != null) {
+            employer.setEmployerId(dto.getEmployerId());
+        }
         employer.setEmployerName(dto.getEmployerName());
         employer.setEmployerDescription(dto.getEmployerDescription());
         employer.setEmployerLocation(dto.getEmployerLocation());
@@ -16,6 +19,7 @@ public class EmployerMapper {
         employer.setEmployerEmail(dto.getEmployerEmail());
         employer.setContactPerson(dto.getContactPerson());
         employer.setContactPhone(dto.getContactPhone());
+        employer.setLogoUrl(dto.getLogoUrl());
 
         return employer;
     }

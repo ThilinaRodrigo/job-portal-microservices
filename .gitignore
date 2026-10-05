@@ -1,0 +1,23 @@
+# Uploads & User Media (Resumes, CVs, Photos, Logos)
+uploads/
+**/uploads/
+**/uploads/**
+uploads/**
+*.pdf
+*.doc
+*.docx
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.avif
+*.webp
+
+# Build & Dependencies
+target/
+**/target/
+.idea/
+**/.idea/
+*.iml
+*.log
+.mvn/

@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gateway-service
+  namespace: job-portal
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gateway
+  template:
+    metadata:
+      labels:
+        app: gateway
+    spec:
+      containers:
+        - name: gateway
+          image: thilinarodrigo/gateway-server:latest
+          ports:
+            - containerPort: 8071
+          env:
+            - name:  EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+              value: http://eureka-server:8070/eureka/
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: gateway-service
+  namespace: job-portal
+spec:
+  type: NodePort
+  selector:
+    app: gateway
+  ports:
+    - port: 8072
+      targetPort: 8072
+      nodePort: 30007
