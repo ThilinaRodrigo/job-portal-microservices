@@ -40,7 +40,8 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
                     new RouteRule("GET", "/job-applications"),
                     new RouteRule("GET", "/applications"),
                     new RouteRule("GET", "/notifications"),
-                    new RouteRule("PUT", "/notifications")
+                    new RouteRule("PUT", "/notifications"),
+                    new RouteRule("POST", "/auth/change-password")
             ),
 
             "EMPLOYER", List.of(
@@ -64,7 +65,8 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
 
                     // Notifications
                     new RouteRule("GET", "/notifications"),
-                    new RouteRule("PUT", "/notifications")
+                    new RouteRule("PUT", "/notifications"),
+                    new RouteRule("POST", "/auth/change-password")
             ),
 
             "EMPLOYEE", List.of(
@@ -85,7 +87,8 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
 
                     // Notifications
                     new RouteRule("GET", "/notifications"),
-                    new RouteRule("PUT", "/notifications")
+                    new RouteRule("PUT", "/notifications"),
+                    new RouteRule("POST", "/auth/change-password")
             ),
 
             "JOBSEEKER", List.of(
@@ -106,7 +109,8 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
 
                     // Notifications
                     new RouteRule("GET", "/notifications"),
-                    new RouteRule("PUT", "/notifications")
+                    new RouteRule("PUT", "/notifications"),
+                    new RouteRule("POST", "/auth/change-password")
             )
     );
 

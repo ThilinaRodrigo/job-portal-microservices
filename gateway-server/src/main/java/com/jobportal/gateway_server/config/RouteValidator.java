@@ -20,7 +20,7 @@ public class RouteValidator {
             return false;
         }
 
-        if (path.startsWith("/auth") || path.startsWith("/jobportal/auth")) {
+        if ((path.startsWith("/auth") || path.startsWith("/jobportal/auth")) && !path.contains("/change-password")) {
             return false;
         }
 
